@@ -1,0 +1,72 @@
+.view-recipes-container {
+    .table-responsive {
+      overflow-x: auto;
+      table-layout: fixed; // Ensuring table layout is fixed
+      
+      .table {
+          min-width: 800px; // Adjust based on your content needs
+          width: 100%;
+          border-collapse: separate;
+      }
+    }
+  
+    .fixed-column-table {
+      .fixed-column {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        color: black;
+        z-index: 1;
+        box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+      }
+
+      .text-long{
+        white-space: normal;
+        overflow-wrap: break-word;
+      }
+  
+      th, td {
+        &:first-child {
+          width: 3rem !important; // Specifying width for the first column
+        }
+        &:nth-child(2){
+          width: 1rem !important; // Specifying width for the 2nd and 3rd columns
+        }
+        &:nth-child(3) {
+            width: 2rem !important; // And so on, adjust as needed
+          }
+        &:nth-child(4) {
+          width: 2rem !important; // And so on, adjust as needed
+        }
+
+        &:nth-child(5) {
+            width: 6rem !important; // And so on, adjust as needed
+        }
+        &:nth-child(6) {
+            width: 6rem !important; // And so on, adjust as needed
+        }
+        &:nth-child(7) {
+            width: 4rem !important; // And so on, adjust as needed
+        }
+        &:nth-child(8) {
+            width: 2rem !important; // And so on, adjust as needed
+        }
+
+        &:nth-child(9) {
+            width: 6rem !important; // And so on, adjust as needed
+        }
+      }
+  
+      th, td {
+        text-align: center;
+        padding: 0.8rem;
+        background: white;
+        color: black;
+        white-space: nowrap; // Ensuring the text does not wrap
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  
