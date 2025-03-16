@@ -240,19 +240,19 @@ export const TeamMembersWidget = () => {
     );
   };
 
-  return (
-    <Card border="light" className="shadow-sm">
-      <Card.Header className="border-bottom border-light d-flex justify-content-between">
-        <h5 className="mb-0">Team members</h5>
-        <Button variant="secondary" size="sm">See all</Button>
-      </Card.Header>
-      <Card.Body>
-        <ListGroup className="list-group-flush list my--3">
-          {teamMembers.map(tm => <TeamMember key={`team-member-${tm.id}`} {...tm} />)}
-        </ListGroup>
-      </Card.Body>
-    </Card>
-  );
+  // return (
+  //   <Card border="light" className="shadow-sm">
+  //     <Card.Header className="border-bottom border-light d-flex justify-content-between">
+  //       <h5 className="mb-0">Team members</h5>
+  //       <Button variant="secondary" size="sm">See all</Button>
+  //     </Card.Header>
+  //     <Card.Body>
+  //       <ListGroup className="list-group-flush list my--3">
+  //         {teamMembers.map(tm => <TeamMember key={`team-member-${tm.id}`} {...tm} />)}
+  //       </ListGroup>
+  //     </Card.Body>
+  //   </Card>
+  // );
 };
 
 export const ProgressTrackWidget = () => {
@@ -282,21 +282,21 @@ export const ProgressTrackWidget = () => {
     );
   };
 
-  return (
-    <Card border="light" className="shadow-sm">
-      <Card.Header className="border-bottom border-light">
-        <h5 className="mb-0">Progress track</h5>
-      </Card.Header>
-      <Card.Body>
+  // return (
+  //   // <Card border="light" className="shadow-sm">
+  //   //   <Card.Header className="border-bottom border-light">
+  //   //     <h5 className="mb-0">Progress track</h5>
+  //   //   </Card.Header>
+  //   //   <Card.Body>
 
-        <Progress title="Rocket - SaaS Template" color="purple" icon={faBootstrap} percentage={34} />
-        <Progress title="Pixel - Design System" color="danger" icon={faAngular} percentage={60} />
-        <Progress title="Spaces - Listings Template" color="tertiary" icon={faVuejs} percentage={45} />
-        <Progress title="Stellar - Dashboard" color="info" icon={faReact} percentage={35} />
-        <Progress last title="Volt - Dashboard" color="purple" icon={faBootstrap} percentage={34} />
-      </Card.Body>
-    </Card>
-  );
+  //       {/* <Progress title="Rocket - SaaS Template" color="purple" icon={faBootstrap} percentage={34} />
+  //       <Progress title="Pixel - Design System" color="danger" icon={faAngular} percentage={60} />
+  //       <Progress title="Spaces - Listings Template" color="tertiary" icon={faVuejs} percentage={45} />
+  //       <Progress title="Stellar - Dashboard" color="info" icon={faReact} percentage={35} />
+  //       <Progress last title="Volt - Dashboard" color="purple" icon={faBootstrap} percentage={34} /> */}
+  //     // </Card.Body>
+  //   </Card>
+  // );
 };
 
 export const RankingWidget = () => {
@@ -366,8 +366,8 @@ export const SalesValueWidget = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">Month</Button>
-          <Button variant="primary" size="sm" className="me-3">Week</Button>
+          {/* <Button variant="secondary" size="sm" className="me-2">Month</Button>
+          <Button variant="primary" size="sm" className="me-3">Week</Button> */}
         </div>
       </Card.Header>
       <Card.Body className="p-2">

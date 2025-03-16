@@ -11,7 +11,11 @@ export default function Recipes() {
     useEffect(() => {
         const fetchRecipeDetails = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/recipes/subcategory/${subcategoryId}/${recipeId}`);
+                const response = await fetch(`${BASE_URL}/recipes/subcategory/${subcategoryId}/${recipeId}`, {
+                    headers: {
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch recipe details');
                 }
@@ -21,10 +25,14 @@ export default function Recipes() {
                 console.error("Error fetching recipe details:", error);
             }
         };
-
+    
         const fetchSimilarRecipes = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/recipes/subcategory/${subcategoryId}`);
+                const response = await fetch(`${BASE_URL}/recipes/subcategory/${subcategoryId}`, {
+                    headers: {
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch similar recipes');
                 }
@@ -37,12 +45,13 @@ export default function Recipes() {
                 console.error("Error fetching similar recipes:", error);
             }
         };
-
+    
         if (subcategoryId && recipeId) {
             fetchRecipeDetails();
             fetchSimilarRecipes();
         }
     }, [subcategoryId, recipeId]);
+    
 
     return (
         <>

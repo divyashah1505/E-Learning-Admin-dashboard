@@ -6,14 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faBoxOpen, faHandHoldingUsd, faChartPie, faFileAlt, faSignOutAlt, faTable, faTimes, faArrowDown, faCloudUpload } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
-// import AddCategory from "../pages/tables/AddCategory"; 
-// import AddSubCategory from "../pages/tables/AddSubCategory"; 
 
 import { Routes } from "../routes";
 import ReactHero from "../assets/img/technologies/react-hero-logo.svg";
-import logo from "../assets/img/icons/logo-color.webp"
+import logo from "../assets/img/icons/logo-color.webp";
 import ProfilePicture from "../assets/img/team/profile-picture-3.jpg";
-
 
 export default (props = {}) => {
   const location = useLocation();
@@ -27,22 +24,28 @@ export default (props = {}) => {
     const { eventKey, title, icon, children = null } = props;
     const [isOpen, setIsOpen] = useState(pathname.indexOf(eventKey) !== -1);
     const toggleOpen = () => setIsOpen(!isOpen);
-  
-    // Determine the class based on whether the accordion is open or not.
+    
     const iconClassName = isOpen ? "rotate-open" : "rotate-close";
-  
+
     return (
-      <Accordion as={Nav.Item} defaultActiveKey={pathname.indexOf(eventKey) !== -1 ? eventKey : ""}>
-        <Accordion.Item eventKey={eventKey}>
-          <Accordion.Button as={Nav.Link} className="d-flex justify-content-between align-items-center" onClick={toggleOpen}>
+      <Accordion 
+        as={Nav.Item} 
+        defaultActiveKey={pathname.indexOf(eventKey) !== -1 ? eventKey : ""}
+        className="navbar-theme-primary" // Added theme class
+      >
+        <Accordion.Item eventKey={eventKey} className="bg-transparent border-0">
+          <Accordion.Button 
+            as={Nav.Link} 
+            className="d-flex justify-content-between align-items-center bg-transparent text-white" // Consistent styling
+            onClick={toggleOpen}
+          >
             <span>
               <span className="sidebar-icon"><FontAwesomeIcon icon={icon} /> </span>
               <span className="sidebar-text">{title}</span>
             </span>
-            {/* Apply dynamic class to FontAwesome icon */}
             <FontAwesomeIcon icon={faArrowDown} className={iconClassName} />
           </Accordion.Button>
-          <Accordion.Body className="multi-level">
+          <Accordion.Body className="multi-level bg-transparent py-0">
             <Nav className="flex-column">
               {children}
             </Nav>
@@ -51,11 +54,9 @@ export default (props = {}) => {
       </Accordion>
     );
   };
-  
-  
 
   const NavItem = (props) => {
-    const { title, link, external, target, icon, image, badgeText, badgeBg = "secondary", badgeColor = "primary" } = props;
+    const { title, link, external, target, icon, image, badgeText, badgeBg = "primary", badgeColor = "primary" } = props;
     const classNames = badgeText ? "d-flex justify-content-start align-items-center justify-content-between" : "";
     const navItemClassName = link === pathname ? "active" : "";
     const linkProps = external ? { href: link } : { as: Link, to: link };
@@ -66,7 +67,6 @@ export default (props = {}) => {
           <span>
             {icon ? <span className="sidebar-icon"><FontAwesomeIcon icon={icon} /> </span> : null}
             {image ? <Image src={image} width={20} height={20} className="sidebar-icon svg-icon" /> : null}
-
             <span className="sidebar-text">{title}</span>
           </span>
           {badgeText ? (
@@ -88,7 +88,7 @@ export default (props = {}) => {
         </Navbar.Toggle>
       </Navbar>
       <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
-        <SimpleBar className={`collapse ${showClass} sidebar d-md-block`}>
+        <SimpleBar className={`collapse ${showClass} sidebar d-md-block navbar-theme-primary`}>
           <div className="sidebar-inner px-4 pt-3">
             <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
               <div className="d-flex align-items-center">
@@ -108,70 +108,16 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="CrazeeCook" link={Routes.Presentation.path} image={logo} />
-
               <NavItem title="Overview" link={Routes.DashboardOverview.path} icon={faChartPie} />
-
               <NavItem title="Customers" icon={faHandHoldingUsd} link={Routes.Customers.path} />
-
-              {/* Add Category Nav Item */}
-              <NavItem title="Add Category" icon={faBoxOpen} link={Routes.AddCategory.path} />
-              {/* <NavItem title="Add Sub Category" icon={faBoxOpen} link={Routes.AddSubCategory.path} /> */}
-
-
+              <NavItem title="Manage Category" icon={faBoxOpen} link={Routes.AddCategory.path} />
               <NavItem title="Upload Recipe" icon={faCloudUpload} link={Routes.UploadRecipe.path} />
-
               <NavItem title="View Recipes" icon={faBoxOpen} link={Routes.ViewRecipe.path} />
 
               <CollapsableNavItem eventKey="tables/" title="Plans and Combos" icon={faTable}>
                 <NavItem title="Manage Combos" link={Routes.ManageCombos.path} />
                 <NavItem title="Manage Plans" link={Routes.ManagePlans.path} />
               </CollapsableNavItem>
-
-              <CollapsableNavItem eventKey="examples/" title="Page Examples" icon={faFileAlt}>
-                <NavItem title="Sign In" link={Routes.Signin.path} />
-                <NavItem title="Sign Up" link={Routes.Signup.path} />
-                <NavItem title="Forgot password" link={Routes.ForgotPassword.path} />
-                <NavItem title="Reset password" link={Routes.ResetPassword.path} />
-                <NavItem title="Lock" link={Routes.Lock.path} />
-                <NavItem title="404 Not Found" link={Routes.NotFound.path} />
-                <NavItem title="500 Server Error" link={Routes.ServerError.path} />
-              </CollapsableNavItem>
-
-              <Dropdown.Divider className="my-3 border-indigo" />
-
-
-              <CollapsableNavItem eventKey="documentation/" title="Getting Started" icon={faBook}>
-                <NavItem title="Overview" link={Routes.DocsOverview.path} />
-                <NavItem title="Download" link={Routes.DocsDownload.path} />
-                <NavItem title="Quick Start" link={Routes.DocsQuickStart.path} />
-                <NavItem title="License" link={Routes.DocsLicense.path} />
-                <NavItem title="Folder Structure" link={Routes.DocsFolderStructure.path} />
-                <NavItem title="Build Tools" link={Routes.DocsBuild.path} />
-                <NavItem title="Changelog" link={Routes.DocsChangelog.path} />
-              </CollapsableNavItem>
-              <CollapsableNavItem eventKey="components/" title="Components" icon={faBoxOpen}>
-                <NavItem title="Accordion" link={Routes.Accordions.path} />
-                <NavItem title="Alerts" link={Routes.Alerts.path} />
-                <NavItem title="Badges" link={Routes.Badges.path} />
-                <NavItem external title="Widgets" link="https://demo.themesberg.com/volt-pro-react/#/components/widgets" target="_blank" badgeText="Pro" />
-                <NavItem title="Breadcrumbs" link={Routes.Breadcrumbs.path} />
-                <NavItem title="Buttons" link={Routes.Buttons.path} />
-                <NavItem title="Forms" link={Routes.Forms.path} />
-                <NavItem title="Modals" link={Routes.Modals.path} />
-                <NavItem title="Navbars" link={Routes.Navbars.path} />
-                <NavItem title="Navs" link={Routes.Navs.path} />
-                <NavItem title="Pagination" link={Routes.Pagination.path} />
-                <NavItem title="Popovers" link={Routes.Popovers.path} />
-                <NavItem title="Progress" link={Routes.Progress.path} />
-                <NavItem title="Tables" link={Routes.Tables.path} />
-                <NavItem title="Tabs" link={Routes.Tabs.path} />
-                <NavItem title="Toasts" link={Routes.Toasts.path} />
-                <NavItem title="Tooltips" link={Routes.Tooltips.path} />
-              </CollapsableNavItem>
-
-              {/* Additional Links */}
-              {/* <NavItem external title="Themesberg" link="https://themesberg.com" target="_blank" image={ThemesbergLogo} />
-              <Button as={Link} to={Routes.Upgrade.path} variant="secondary" className="upgrade-to-pro"><FontAwesomeIcon icon={faRocket} className="me-1" /> Upgrade to Pro</Button> */}
             </Nav>
           </div>
         </SimpleBar>
@@ -179,4 +125,3 @@ export default (props = {}) => {
     </>
   );
 };
-
