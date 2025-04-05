@@ -260,11 +260,12 @@ export const UploadRecipe = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await axios.get(`${BASE_URL}/vcategories`);
+        const response = await axios.get(`${BASE_URL}/vcategories`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
         const categoryData = response.data.map(category => ({
           id: category.Category_id,
           name: category.Category_Name
@@ -276,13 +277,16 @@ export const UploadRecipe = () => {
     }
     fetchCategories();
   }, []);
+  
 
   const fetchSubCategories = async (categoryId) => {
     if (categoryId) {
       try {
-        const response = await axios.get(`${BASE_URL}/subcategories/${categoryId}`);
+        const response = await axios.get(`${BASE_URL}/subcategories/${categoryId}`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
         const subCategoryData = response.data.map(subCategory => ({
-          id: subCategory.Sub_Category_id, 
+          id: subCategory.Sub_Category_id,
           name: subCategory.Sub_Category_Name
         }));
         setSubCategories(subCategoryData);
