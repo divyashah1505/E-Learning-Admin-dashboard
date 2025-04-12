@@ -1,63 +1,105 @@
+import { BASE_URL } from "../../config/config";
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faTasks, faUserShield, faUtensils } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
+import { faCashRegister, faChartLine, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row } from '@themesberg/react-bootstrap';
 import { 
   CounterWidget, 
-  CircleChartWidget, 
-  BarChartWidget, 
   TeamMembersWidget, 
   ProgressTrackWidget, 
-  RankingWidget, 
-  SalesValueWidget, 
-  SalesValueWidgetPhone, 
-  AcquisitionWidget 
+  SalesValueWidgetPhone
 } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
-import { trafficShares, totalOrders } from "../../data/charts";
 
 const Dashboard = () => {
   const [recipeCount, setRecipeCount] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
+  const [categoryCount, setCategoryCount] = useState(0);
 
   useEffect(() => {
     const fetchRecipeCount = async () => {
       try {
-        const response = await fetch("/api/vrecipes"); // Fetch from existing endpoint
+        const response = await fetch(`${BASE_URL}/vrecipes`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         const data = await response.json();
-        setRecipeCount(data.recipes.length || 0); // Ensure fallback if count is missing
+        setRecipeCount(Array.isArray(data.recipes) ? data.recipes.length : 0);
       } catch (error) {
         console.error("Error fetching recipe count:", error);
       }
     };
 
+    const fetchCustomerCount = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/vcustomers`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        const data = await response.json();
+        setCustomerCount(Array.isArray(data) ? data.length : 0);
+      } catch (error) {
+        console.error("Error fetching customer count:", error);
+      }
+    };
+
+    const fetchCategoryCount = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/vcategories`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        const data = await response.json();
+        setCategoryCount(Array.isArray(data) ? data.length : 0);
+      } catch (error) {
+        console.error("Error fetching category count:", error);
+      }
+    };
+
     fetchRecipeCount();
+    fetchCustomerCount();
+    fetchCategoryCount();
   }, []);
 
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        {/* <Dropdown className="btn-toolbar"> */}
-        
-        
-
-        
+        {/* Toolbar or action buttons can go here if needed */}
       </div>
 
       <Row className="justify-content-md-center">
-        <Col xs={12} className="mb-4 d-none d-sm-block">
-          <SalesValueWidget title="Sales Value" value="10,567" percentage={10.57} />
-        </Col>
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone title="Site Traffic" value="10,567" percentage={10.57} />
         </Col>
+
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CounterWidget category="Customers"  icon={faChartLine} iconColor="shape-secondary" />
+          <CounterWidget 
+            category="Customers"  
+            title={customerCount.toString()}  
+            icon={faChartLine} 
+            iconColor="shape-secondary" 
+          />
         </Col>
+
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CounterWidget category="Category" percentage={28.4} icon={faCashRegister} iconColor="shape-tertiary" />
+          <CounterWidget 
+            category="Category" 
+            title={categoryCount.toString()}  
+            icon={faCashRegister} 
+            iconColor="shape-tertiary" 
+          />
         </Col>
+
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CounterWidget category="Total Recipes" title={recipeCount.toString()}  percentage={0} icon={faUtensils} iconColor="shape-primary" />
+          <CounterWidget 
+            category="Total Recipes" 
+            title={recipeCount.toString()}  
+            percentage={0} 
+            icon={faUtensils} 
+            iconColor="shape-primary" 
+          />
         </Col>
       </Row>
 
@@ -77,19 +119,6 @@ const Dashboard = () => {
                 </Col>
               </Row>
             </Col>
-            {/* <Col xs={12} xl={4}>
-              <Row>
-                <Col xs={12} className="mb-4">
-                  <BarChartWidget title="Total orders" value={452} percentage={18.2} data={totalOrders} />
-                </Col>
-                <Col xs={12} className="px-0 mb-4">
-                  <RankingWidget />
-                </Col>
-                <Col xs={12} className="px-0">
-                  <AcquisitionWidget />
-                </Col>
-              </Row>
-            </Col> */}
           </Row>
         </Col>
       </Row>

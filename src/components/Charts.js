@@ -12,7 +12,7 @@ const salesData = {
       label: "Sales",
       data: [10, 20, 30, 40, 50],
       borderColor: "blue",
-      backgroundColor: "rgba(0,0,255,0.2)",
+      backgroundColor: "rgba(89, 89, 128, 0.2)",
     },
   ],
 };

@@ -45,7 +45,7 @@ export const PageVisitsTable = () => {
 
   return (
     <Card border="light" className="shadow-sm">
-      <Card.Header>
+      {/* <Card.Header>
         <Row className="align-items-center">
           <Col>
             <h5>Page visits</h5>
@@ -54,8 +54,8 @@ export const PageVisitsTable = () => {
             <Button variant="secondary" size="sm">See all</Button>
           </Col>
         </Row>
-      </Card.Header>
-      <Table responsive className="align-items-center table-flush">
+      </Card.Header> */}
+      {/* <Table responsive className="align-items-center table-flush">
         <thead className="thead-light">
           <tr>
             <th scope="col">Page name</th>
@@ -67,7 +67,7 @@ export const PageVisitsTable = () => {
         <tbody>
           {pageVisits.map(pv => <TableRow key={`page-visit-${pv.id}`} {...pv} />)}
         </tbody>
-      </Table>
+      </Table> */}
     </Card>
   );
 };

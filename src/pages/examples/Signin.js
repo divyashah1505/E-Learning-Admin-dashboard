@@ -248,9 +248,9 @@ const SignIn = () => {
                     {loading ? <Spinner animation="border" size="sm" /> : 'Sign in'}
                   </Button>
                 </Form>
-                <div className="text-center mt-3">
+                {/* <div className="text-center mt-3">
                   <Link to="/examples/forgot-password">Forgot Password?</Link>
-                </div>
+                </div> */}
               </div>
             </Col>
           </Row>
