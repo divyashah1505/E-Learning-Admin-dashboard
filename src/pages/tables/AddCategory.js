@@ -973,7 +973,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from "../../config/config";
-
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import IconButton from "@mui/material/IconButton";
 function AddCategory() {
   const [showModal, setShowModal] = useState(false);
   const [categoryName, setCategoryName] = useState('');

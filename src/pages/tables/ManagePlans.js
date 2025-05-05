@@ -279,9 +279,6 @@
 
 // export default ManagePlans;
 
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -297,14 +294,7 @@ function ManagePlans() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [plans, setPlans] = useState([]);
-  const [editPlans, setEditPlans] = useState({
-    id: '',
-    name: '',
-    description: '',
-    thumbnail: null,
-    price: ''
-  });
-  const [isEditing, setIsEditing] = useState(false);
+  const [editPlans, setEditPlans] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [planToDelete, setPlanToDelete] = useState(null);
 
@@ -316,63 +306,52 @@ function ManagePlans() {
     try {
       const response = await fetch(`${BASE_URL}/vplans`, {
         headers: {
-          "ngrok-skip-browser-warning": "true" // Bypass Ngrok warning page
+          "ngrok-skip-browser-warning": "true"
         }
       });
-  
-      if (!response.ok) {
-        throw new Error("Failed to fetch plans. Please try again.");
-      }
-  
+
+      if (!response.ok) throw new Error("Failed to fetch plans. Please try again.");
+
       const data = await response.json();
-  
-      // Sort plans by descending order of plan ID
       const sortedPlans = data.sort((a, b) => b.planid - a.planid);
       setPlans(sortedPlans);
     } catch (error) {
       setError(error.message || "Network error. Please try again.");
-      console.error("Error fetching plans:", error);
     }
   };
-  
-
-  const handleClose = () => {
-    setShowModal(false);
-    resetMessages();
-    resetForm();
-  };
-
-  const handleShow = () => setShowModal(true);
 
   const resetForm = () => {
     setPlanName('');
     setPlanDescription('');
     setPlansThumbnail(null);
     setPlanPrice('');
-    setEditPlans({
-      id: '',
-      name: '',
-      description: '',
-      thumbnail: null,
-      price: ''
-    });
-    setIsEditing(false);
+    setEditPlans(null);
   };
 
-  const resetMessages = () => {
-    setMessage('');
+  const handleClose = () => {
+    setShowModal(false);
+    resetForm();
     setError('');
+    setMessage('');
+  };
+
+  const handleShow = () => {
+    resetForm();
+    setShowModal(true);
   };
 
   const handleSubmit = async () => {
+    if (!planName || !planDescription || !planPrice) {
+      setError('All fields are required.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('planname', planName);
     formData.append('description', planDescription);
     formData.append('planprice', planPrice);
-    if (plansThumbnail) {
-      formData.append('plansthumbnail', plansThumbnail);
-    }
-  
+    if (plansThumbnail) formData.append('plansthumbnail', plansThumbnail);
+
     try {
       const response = await fetch(`${BASE_URL}/aplans`, {
         method: 'POST',
@@ -384,51 +363,35 @@ function ManagePlans() {
         fetchPlans();
         handleClose();
       } else {
-        setError(result.error || 'Failed to add plan. Please try again.');
+        setError(result.error || 'Failed to add plan.');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
-      console.error('Error adding plan:', error);
+      setError('Network error.');
     }
   };
 
   const handleEdit = (plan) => {
-    setIsEditing(true);
     setEditPlans({
       id: plan.planid,
       name: plan.planname,
       description: plan.description,
-      thumbnail: plan.plansthumbnail,
-      price: plan.planprice
+      price: plan.planprice,
+      thumbnail: null
     });
-    handleShow();
-  };
-
-  const handleEditInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditPlans(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleEditThumbnailChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setEditPlans(prevState => ({
-        ...prevState,
-        thumbnail: e.target.files[0],
-      }));
-    }
+    setShowModal(true);
   };
 
   const handleEditSubmit = async () => {
+    if (!editPlans.name || !editPlans.description || !editPlans.price) {
+      setError('All fields are required.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('planname', editPlans.name);
     formData.append('description', editPlans.description);
     formData.append('planprice', editPlans.price);
-    if (editPlans.thumbnail) {
-      formData.append('plansthumbnail', editPlans.thumbnail);
-    }
+    if (editPlans.thumbnail) formData.append('plansthumbnail', editPlans.thumbnail);
 
     try {
       const response = await fetch(`${BASE_URL}/editplans/${editPlans.id}`, {
@@ -441,16 +404,15 @@ function ManagePlans() {
         fetchPlans();
         handleClose();
       } else {
-        setError(result.error || 'Failed to update plan. Please try again.');
+        setError(result.error || 'Failed to update plan.');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
-      console.error('Error updating plan:', error);
+      setError('Network error.');
     }
   };
 
-  const handleDelete = (planid) => {
-    setPlanToDelete(planid);
+  const handleDelete = (id) => {
+    setPlanToDelete(id);
     setShowDeleteConfirmation(true);
   };
 
@@ -462,22 +424,20 @@ function ManagePlans() {
       if (response.ok) {
         setMessage('Plan deleted successfully.');
         fetchPlans();
-        setShowDeleteConfirmation(false);
       } else {
-        setError('Failed to delete plan. Please try again.');
-        setShowDeleteConfirmation(false);
+        setError('Failed to delete plan.');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError('Network error.');
+    } finally {
       setShowDeleteConfirmation(false);
-      console.error('Error deleting plan:', error);
     }
   };
 
   const DeleteConfirmationModal = () => (
     <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Confirmation</Modal.Title>
+        <Modal.Title>Delete Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>Are you sure you want to delete this plan?</Modal.Body>
       <Modal.Footer>
@@ -488,40 +448,62 @@ function ManagePlans() {
   );
 
   return (
-    <div>
-      <div className='mt-4'>
-        <Button variant="primary" size="sm" onClick={handleShow}>
-          <FontAwesomeIcon icon={faPlus} className="me-2" /> Add plan
-        </Button>
-      </div>
+    <div className="mt-4">
+      <Button variant="primary" size="sm" onClick={handleShow}>
+        <FontAwesomeIcon icon={faPlus} className="me-2" /> Add Plan
+      </Button>
 
       <Modal show={showModal} onHide={handleClose} centered>
-        <Modal.Header closeButton style={{ backgroundColor: '#2CA58D', textAlign: 'center' }}>
+        <Modal.Header closeButton style={{ backgroundColor: '#2CA58D' }}>
           <Modal.Title style={{ fontFamily: 'serif', fontWeight: 'bold', color: 'white' }}>
-            {isEditing ? 'Edit plan' : 'Add plan'}</Modal.Title>
+            {editPlans ? 'Edit Plan' : 'Add Plan'}
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ borderRadius: '90px' }}>
-        {message && <p style={{ color: 'green', textAlign: 'center' }}>{message}</p>}
-        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        <Modal.Body>
+          {message && <p style={{ color: 'green', textAlign: 'center' }}>{message}</p>}
+          {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
           <Form>
-            <Form.Group className="mb-3" controlId="formPlanName">
+            <Form.Group className="mb-3">
               <Form.Label>Plan Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter plan name" name="name" value={isEditing ? editPlans.name : planName} onChange={handleEditInputChange} />
+              <Form.Control
+                type="text"
+                value={editPlans ? editPlans.name : planName}
+                onChange={(e) => editPlans ? setEditPlans({ ...editPlans, name: e.target.value }) : setPlanName(e.target.value)}
+              />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPlanDescription">
+            <Form.Group className="mb-3">
               <Form.Label>Plan Description</Form.Label>
-              <Form.Control as="textarea" rows={3} placeholder="Enter plan description" name="description" value={isEditing ? editPlans.description : planDescription} onChange={handleEditInputChange} />
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={editPlans ? editPlans.description : planDescription}
+                onChange={(e) => editPlans ? setEditPlans({ ...editPlans, description: e.target.value }) : setPlanDescription(e.target.value)}
+              />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPlanPrice">
+            <Form.Group className="mb-3">
               <Form.Label>Plan Price</Form.Label>
-              <Form.Control type="text" placeholder="Enter plan price" name="price" value={isEditing ? editPlans.price : planPrice} onChange={handleEditInputChange} />
+              <Form.Control
+                type="text"
+                value={editPlans ? editPlans.price : planPrice}
+                onChange={(e) => editPlans ? setEditPlans({ ...editPlans, price: e.target.value }) : setPlanPrice(e.target.value)}
+              />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPlansThumbnail">
+            <Form.Group className="mb-3">
               <Form.Label>Plan Thumbnail</Form.Label>
-              <Form.Control type="file" onChange={handleEditThumbnailChange} />
+              <Form.Control
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (editPlans) {
+                    setEditPlans({ ...editPlans, thumbnail: file });
+                  } else {
+                    setPlansThumbnail(file);
+                  }
+                }}
+              />
             </Form.Group>
-            <Button variant="primary" onClick={isEditing ? handleEditSubmit : handleSubmit}>
-              {isEditing ? 'Save Changes' : 'Add Plan'}
+            <Button variant="primary" onClick={editPlans ? handleEditSubmit : handleSubmit}>
+              {editPlans ? 'Save Changes' : 'Add Plan'}
             </Button>
           </Form>
         </Modal.Body>
@@ -530,29 +512,27 @@ function ManagePlans() {
       <Table striped bordered hover className="mt-4">
         <thead>
           <tr>
-            <th style={{textAlign: 'center'}} >Sr. No.</th>
-            <th style={{textAlign: 'center'}} >Name</th>
-            <th style={{textAlign: 'center'}} >Description</th>
-            <th style={{textAlign: 'center'}} >Price</th>
-            <th style={{textAlign: 'center'}} >Thumbnail</th>
-            <th style={{textAlign: 'center'}} >Actions</th>
+            <th style={{ textAlign: 'center' }}>Sr. No.</th>
+            <th style={{ textAlign: 'center' }}>Name</th>
+            <th style={{ textAlign: 'center' }}>Description</th>
+            <th style={{ textAlign: 'center' }}>Price</th>
+            <th style={{ textAlign: 'center' }}>Thumbnail</th>
+            <th style={{ textAlign: 'center' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
-        {plans.map((plan, index) => (
+          {plans.map((plan, index) => (
             <tr key={plan.planid}>
-              <td style={{ textAlign: 'center' }}> {index + 1}</td>
-              <td style={{ textAlign: 'center' }}> {plan.planname}</td>
-              <td style={{ textAlign: 'center' }}> {plan.description}</td>
-              <td style={{ textAlign: 'center' }}> {plan.planprice}</td>
-              <td style={{ textAlign: 'center' }}> 
+              <td style={{ textAlign: 'center' }}>{index + 1}</td>
+              <td style={{ textAlign: 'center' }}>{plan.planname}</td>
+              <td style={{ textAlign: 'center' }}>{plan.description}</td>
+              <td style={{ textAlign: 'center' }}>{plan.planprice}</td>
+              <td style={{ textAlign: 'center' }}>
                 {plan.plansthumbnail ? (
-                  <img src={plan.plansthumbnail} alt="Plan Thumbnail" style={{ width: '80px', height: '80px' }} />
-                ) : (
-                  'No Thumbnail'
-                )}
+                  <img src={plan.plansthumbnail} alt="Thumbnail" style={{ width: '80px', height: '80px' }} />
+                ) : 'No Thumbnail'}
               </td>
-              <td style={{ textAlign: 'center' }}> 
+              <td style={{ textAlign: 'center' }}>
                 <Button variant="info" size="sm" onClick={() => handleEdit(plan)}>
                   <FontAwesomeIcon icon={faEdit} />
                 </Button>{' '}

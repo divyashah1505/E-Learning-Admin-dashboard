@@ -1,12 +1,12 @@
 import { BASE_URL } from "../../config/config";
 import React, { useEffect, useState } from "react";
-import { faCashRegister, faChartLine, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faCashRegister, faChartLine, faUtensils, faUsers, faBowlFood, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row } from '@themesberg/react-bootstrap';
 import { 
   CounterWidget, 
   TeamMembersWidget, 
   ProgressTrackWidget, 
-  SalesValueWidgetPhone
+  SalesValueWidgetPhone 
 } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 
@@ -73,35 +73,38 @@ const Dashboard = () => {
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone title="Site Traffic" value="10,567" percentage={10.57} />
         </Col>
-
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget 
-            category="Customers"  
+            category="Total Customers" 
             title={customerCount.toString()}  
-            icon={faChartLine} 
-            iconColor="shape-secondary" 
+            percentage={0} 
+            icon={faUsers} 
+            iconColor="shape-primary" 
           />
         </Col>
-
+       
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget 
-            category="Category" 
+            category="Total Categories" 
             title={categoryCount.toString()}  
-            icon={faCashRegister} 
-            iconColor="shape-tertiary" 
-          />
-        </Col>
-
-        <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CounterWidget 
-            category="Total Recipes" 
-            title={recipeCount.toString()}  
             percentage={0} 
             icon={faUtensils} 
             iconColor="shape-primary" 
           />
         </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget 
+            category="Total Recipes" 
+            title={recipeCount.toString()}  
+            percentage={0} 
+            icon={faBowlFood} 
+            iconColor="shape-primary" 
+          />
+        </Col>
       </Row>
+     
+
+    
 
       <Row>
         <Col xs={12} xl={12} className="mb-4">
